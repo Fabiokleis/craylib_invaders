@@ -101,7 +101,7 @@ void update_bullets(player *p, float delta_time) {
 
 int main(void) {
 
-    InitWindow(WIDTH, HEIGHT, "craylib_invaiders");
+    InitWindow(WIDTH, HEIGHT, "craylib_invaders");
 
     double start_time = GetTime();
     double current_time = 0.0;
