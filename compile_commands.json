@@ -1,0 +1,53 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-std=c99",
+      "-Wextra",
+      "-I",
+      "./include/",
+      "-o",
+      "cgame",
+      "src/bullet.c"
+    ],
+    "directory": "/home/inhambu/Documentos/git_hub/cgame_raylib",
+    "file": "/home/inhambu/Documentos/git_hub/cgame_raylib/src/bullet.c",
+    "output": "/home/inhambu/Documentos/git_hub/cgame_raylib/cgame"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-std=c99",
+      "-Wextra",
+      "-I",
+      "./include/",
+      "-o",
+      "cgame",
+      "src/main.c"
+    ],
+    "directory": "/home/inhambu/Documentos/git_hub/cgame_raylib",
+    "file": "/home/inhambu/Documentos/git_hub/cgame_raylib/src/main.c",
+    "output": "/home/inhambu/Documentos/git_hub/cgame_raylib/cgame"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-std=c99",
+      "-Wextra",
+      "-I",
+      "./include/",
+      "-o",
+      "cgame",
+      "src/player.c"
+    ],
+    "directory": "/home/inhambu/Documentos/git_hub/cgame_raylib",
+    "file": "/home/inhambu/Documentos/git_hub/cgame_raylib/src/player.c",
+    "output": "/home/inhambu/Documentos/git_hub/cgame_raylib/cgame"
+  }
+]
