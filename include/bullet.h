@@ -1,8 +1,8 @@
 #ifndef __BULLET_H__
 #define __BULLET_H__
-#include "raylib.h"
+#include <raylib.h>
 
-typedef struct bullet {
+typedef struct {
     Vector2 position;
     Vector2 size;
     Vector2 velocity;

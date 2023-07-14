@@ -1,10 +1,10 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 #include <stdint.h>
-#include "raylib.h"
+#include <raylib.h>
 #include "bullet.h"
 
-typedef struct player {
+typedef struct {
     Vector2 position;
     Vector2 size;
     Vector2 velocity;

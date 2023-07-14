@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include <raylib.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "player.h"
@@ -34,7 +34,7 @@ void update_player(player *p, double *bullet_time, float delta_time) {
     }
     
     if (IsKeyDown(KEY_LEFT)) {
-        if (p->position.x > 1) p->position.x -= (p->velocity.x * delta_time);
+        if (p->position.x > 0) p->position.x -= (p->velocity.x * delta_time);
     }
     
     if (IsKeyDown(KEY_UP) && *bullet_time >= 0.2f) {
