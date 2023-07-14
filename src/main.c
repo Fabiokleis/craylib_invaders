@@ -1,3 +1,4 @@
+
 #include <stdint.h>
 #include <raylib.h>
 #include <stdlib.h>
@@ -36,14 +37,13 @@ void update(
 ) {
     update_player(p, bullet_time, delta_time);
     update_bullets(p, delta_time);
-    update_enemies(enemies, enemie_bullets, bullet_counter, enemie_shoot_time, delta_time, direction_step);
+    update_enemies(p, enemies, enemie_bullets, bullet_counter, enemie_shoot_time, delta_time, direction_step);
 }
 
 void draw(player p, enemie enemies[ENEMIE_ROWS][ENEMIE_COLS], bullet enemie_bullets[ENEMIE_BULLETS], uint32_t bullet_counter) {
     BeginDrawing();
     {
         ClearBackground(DARKGRAY);
-
         draw_enemies(enemies, enemie_bullets, bullet_counter);
         draw_player(p);
         draw_bullets(p);

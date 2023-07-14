@@ -1,6 +1,8 @@
 #include <raylib.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
 #include "player.h"
 #include "bullet.h"
 #include "config.h"
@@ -18,6 +20,57 @@ player Player(Vector2 pos, Vector2 size, Vector2 vel, Color color) {
     };
 }
 
+Vector2 sub(Vector2 v0, Vector2 v1) {
+    return (Vector2){v0.x - v1.x, v0.y - v1.y};
+}
+
+float dot(Vector2 v0, Vector2 v1) {
+    return (v0.x * v1.x + v0.y * v1.y);
+}
+
+float norma(Vector2 v0) {
+    return sqrt(v0.x * v0.x + v0.y * v0.y);
+}
+
+Vector2 perpendicular(Vector2 v0) {
+    Vector2 axis = {v0.y, -v0.x};
+    return (Vector2){axis.x/norma(axis), axis.y/norma(axis)};
+}
+
+float sat_collision_detect(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2) {
+    Vector2 va[4], vb[4];
+    va[0] = (Vector2){pos1.x, pos1.y};
+    va[1] = (Vector2){pos1.x + size1.x, pos1.y};
+    va[2] = (Vector2){pos1.x + size1.x, pos1.y + size1.y};
+    va[3] = (Vector2){pos1.x, pos1.y + size1.y};
+
+    vb[0] = (Vector2){pos2.x, pos2.y};
+    vb[1] = (Vector2){pos2.x + size2.x, pos2.y};
+    vb[2] = (Vector2){pos2.x + size2.x, pos2.y + size2.y};
+    vb[3] = (Vector2){pos2.x, pos2.y + size2.y};
+
+    
+    float separation = -1.0f;
+    for (uint32_t i = 0; i < 4; ++i) {
+        Vector2 normal = perpendicular(sub(va[(i + 1) % 4], va[i]));
+        float minsep = 1.0f;
+
+        for (uint32_t j = 0; j < 4; ++j) {
+            minsep = fmin(minsep, dot(sub(vb[j], va[i]), normal));   
+        }
+        
+        if (minsep > separation) {
+            separation = minsep;
+        }
+    }
+    return separation;
+}
+
+bool is_colliding_squares(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2) {
+    return sat_collision_detect(pos1, size1, pos2, size2) <= 0 &&
+        sat_collision_detect(pos2, size2, pos1, size1) <= 0;
+}
+
 void shoot(player *p) {
     if (p->amount_of_bullets < p->max_bullets) {
         Vector2 b_size = {p->size.x/3, p->size.y/2};
@@ -26,7 +79,7 @@ void shoot(player *p) {
         p->bullets[p->amount_of_bullets++] = Bullet(b_pos, b_size, b_vel, RED);
     }
 }
-
+    
 void update_player(player *p, double *bullet_time, float delta_time) {
 
     if (IsKeyDown(KEY_RIGHT)) {

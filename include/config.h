@@ -1,7 +1,7 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 
-#define FPS 60
+#define FPS 120
 #define WIDTH 1200
 #define HEIGHT 720
 #define FRAME_TIME 1.0f/(float)FPS

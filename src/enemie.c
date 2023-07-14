@@ -17,6 +17,7 @@ enemie Enemie(Vector2 pos, Vector2 size, Vector2 vel, Color color, uint32_t rand
 }
 
 void update_enemies(
+    player *p,
     enemie enemies[ENEMIE_ROWS][ENEMIE_COLS],
     bullet enemie_bullets[ENEMIE_BULLETS],
     uint32_t *bullet_counter,
@@ -31,6 +32,9 @@ void update_enemies(
        
         for (uint32_t i = 0; i < ENEMIE_ROWS; ++i) {
             for (uint32_t j = 0; j < ENEMIE_COLS; ++j) {
+                if (enemies[i][j].position.x == -1 && enemies[i][j].position.y == -1)
+                    continue;
+                
                 enemies[i][j].shoot_time--;
                 if (enemies[i][j].shoot_time == 0) {
                     
@@ -39,21 +43,38 @@ void update_enemies(
                     Vector2 b_pos = {enemies[i][j].position.x + enemies[i][j].size.x/2 - b_size.x/2, enemies[i][j].position.y};
                     Vector2 b_vel = {0.0f, 500.0f};
                                         
-                    enemie_bullets[(*bullet_counter)] = Bullet(b_pos, b_size, b_vel, DARKBLUE);
-                    (*bullet_counter)++;
+                    enemie_bullets[(*bullet_counter)++] = Bullet(b_pos, b_size, b_vel, DARKBLUE);
                 }
             }
-
-
         }
     }
 
     for (uint32_t i = 0; i < ENEMIE_ROWS; ++i) {
         for (uint32_t j = 0; j < ENEMIE_COLS; ++j) {
+            if (enemies[i][j].position.x == -1 && enemies[i][j].position.y == -1)
+                    continue;
+
             enemies[i][j].position.x += enemies[i][j].velocity.x * delta_time * direction_step;
             enemies[i][j].position.y += enemies[i][j].velocity.y * delta_time;
         }
     }
+    
+    for (uint32_t i = 0; i < p->amount_of_bullets; ++i) {
+        for (uint32_t j = 0; j < ENEMIE_ROWS; ++j) {
+            for (uint32_t k = 0; k < ENEMIE_COLS; ++k) {
+                if (enemies[j][k].position.x == -1 && enemies[j][k].position.y == -1)
+                    continue;
+                            
+                if (is_colliding_squares(p->bullets[i].position, p->bullets[i].size, enemies[j][k].position, enemies[j][k].size)) {                        
+                    enemies[j][k].position.x = -1;
+                    enemies[j][k].position.y = -1;
+                    p->score++;
+                    p->bullets[i] = p->bullets[--(p->amount_of_bullets)];
+                }
+            }
+        }        
+    }
+    
 
     for (uint32_t b = 0; b < *bullet_counter; ++b) {
         enemie_bullets[b].position.y += enemie_bullets[b].velocity.y * delta_time;
@@ -66,6 +87,9 @@ void update_enemies(
 void draw_enemies(enemie enemies[ENEMIE_ROWS][ENEMIE_COLS], bullet enemie_bullets[ENEMIE_BULLETS], uint32_t bullet_counter) {
     for (uint32_t i = 0; i < ENEMIE_ROWS; ++i) {
         for (uint32_t j = 0; j < ENEMIE_COLS; ++j) {
+            if (enemies[i][j].position.x == -1 && enemies[i][j].position.y == -1)
+               continue;
+            
             DrawRectangleV(enemies[i][j].position, enemies[i][j].size, enemies[i][j].color); 
         }
     }

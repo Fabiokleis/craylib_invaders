@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "config.h"
 #include "bullet.h"
+#include "player.h"
 
 typedef struct {
     Vector2 position;
@@ -16,6 +17,7 @@ typedef struct {
 
 enemie Enemie(Vector2 pos, Vector2 size, Vector2 vel, Color color, uint32_t rand);
 void update_enemies(
+    player *p,
     enemie enemies[ENEMIE_ROWS][ENEMIE_COLS],
     bullet enemie_bullets[ENEMIE_BULLETS],
     uint32_t *bullet_counter,

@@ -2,7 +2,9 @@
 #define __PLAYER_H__
 #include <stdint.h>
 #include <raylib.h>
+#include <stdbool.h>
 #include "bullet.h"
+
 
 typedef struct {
     Vector2 position;
@@ -17,6 +19,8 @@ typedef struct {
 
 player Player(Vector2 pos, Vector2 size, Vector2 vel, Color color);
 void shoot(player *p);
+float sat_collision_detect(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2);
+bool is_colliding_squares(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2);
 void update_player(player *p, double *bullet_time, float delta_time);
 void draw_player(player p);
 void update_bullets(player *p, float delta_time);

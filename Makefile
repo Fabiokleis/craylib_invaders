@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -std=c99 -Wextra
 INCLUDE_PATHS = -I ./include/
-LDFLAGS = -lraylib
+LDFLAGS = -lraylib -lm
 SOURCES = src/*.c
 TARGET = cgame
 
