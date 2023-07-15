@@ -8,14 +8,15 @@
 #include "player.h"
 #include "enemie.h"
 
-void setup(player *p, enemie enemies[ENEMIE_ROWS][ENEMIE_COLS]) {
-    InitWindow(WIDTH, HEIGHT, "craylib_invaders");
-    InitAudioDevice();              // Initialize audio device
+void setup(player *p, Texture2D p_texture, enemie enemies[ENEMIE_ROWS][ENEMIE_COLS]) {
+
     Sound b_sound = LoadSound("assets/player_bullet_sound.mp3");
+    
     *p = Player(
       (Vector2){(float)WIDTH/2 - 30.0f, (float)HEIGHT - 30.0f},
       (Vector2){30.0f, 30.0f}, (Vector2){400.0f, 0.0f}, BLUE,
-      b_sound
+      b_sound,
+      p_texture
     );
 
     srand(time(NULL));
@@ -44,11 +45,11 @@ void update(
     update_enemies(p, enemies, enemie_bullets, bullet_counter, enemie_shoot_time, delta_time, direction_step);
 }
 
-void draw(player p, enemie enemies[ENEMIE_ROWS][ENEMIE_COLS], bullet enemie_bullets[ENEMIE_BULLETS], uint32_t bullet_counter) {
+void draw(player p, enemie enemies[ENEMIE_ROWS][ENEMIE_COLS], Texture2D e_texture, bullet enemie_bullets[ENEMIE_BULLETS], uint32_t bullet_counter) {
     BeginDrawing();
     {
         ClearBackground(BLACK);
-        draw_enemies(enemies, enemie_bullets, bullet_counter);
+        draw_enemies(enemies, e_texture, enemie_bullets, bullet_counter);
         draw_player(p);
         draw_bullets(p);
     }      
@@ -56,7 +57,13 @@ void draw(player p, enemie enemies[ENEMIE_ROWS][ENEMIE_COLS], bullet enemie_bull
 }
 
 int main(void) {
-
+    
+    InitWindow(WIDTH, HEIGHT, "craylib_invaders");
+    InitAudioDevice();              // Initialize audio device
+    Texture2D p_texture = LoadTexture("assets/player_sprite.png");
+    Texture2D e_texture = LoadTexture("assets/enemie_sprite.png");
+    
+    
  reset:
     double start_time = GetTime();
     double current_time = 0.0;
@@ -75,8 +82,9 @@ int main(void) {
     player p = {0};
     enemie enemies[ENEMIE_ROWS][ENEMIE_COLS];
     bullet enemie_bullets[ENEMIE_BULLETS];
+    
 
-    setup(&p, enemies);
+    setup(&p, p_texture, enemies);
     
     while (!WindowShouldClose() && p.life > 0) {
         PollInputEvents();
@@ -111,7 +119,7 @@ int main(void) {
 
             snprintf(time, sizeof(float), "%u", (uint32_t)time_counter);
             DrawText(time, WIDTH/2, 5, 30, LIGHTGRAY);
-            draw(p, enemies, enemie_bullets, bullet_counter);
+            draw(p, enemies, e_texture, enemie_bullets, bullet_counter);
 
             SwapScreenBuffer();         // flip the back buffer to screen (front buffer)
 
@@ -124,7 +132,9 @@ int main(void) {
             start_time = current_time;
        }     
     }
-    
+
+    UnloadTexture(p_texture);       // Texture unloading
+    UnloadTexture(e_texture);
     CloseWindow();
 
     return 0;

@@ -8,7 +8,7 @@
 #include "config.h"
 
 
-player Player(Vector2 pos, Vector2 size, Vector2 vel, Color color, Sound bullet_sound) {
+player Player(Vector2 pos, Vector2 size, Vector2 vel, Color color, Sound bullet_sound, Texture2D p_texture) {
     return (player){
       .position = pos,
       .size = size,
@@ -19,6 +19,7 @@ player Player(Vector2 pos, Vector2 size, Vector2 vel, Color color, Sound bullet_
       .amount_of_bullets = 0,
       .life = LIFES,
       .bullet_sound = bullet_sound,
+      .p_texture = p_texture,
     };
 }
 
@@ -78,7 +79,7 @@ void shoot(player *p) {
         Vector2 b_size = {p->size.x/3, p->size.y};
         Vector2 b_pos = {p->position.x + p->size.x/2 - b_size.x/2, p->position.y};
         Vector2 b_vel = {0.0f, 800.0f};
-        p->bullets[p->amount_of_bullets++] = Bullet(b_pos, b_size, b_vel, RED);
+        p->bullets[p->amount_of_bullets++] = Bullet(b_pos, b_size, b_vel, VIOLET);
     }
 }
     
@@ -101,7 +102,7 @@ void update_player(player *p, double *bullet_time, float delta_time) {
 
 
 void draw_player(player p) {
-    DrawRectangleV(p.position, p.size, p.color);
+    DrawTextureV(p.p_texture, p.position, p.color);
 
     char *bullets = (char*)malloc(9 + sizeof(uint32_t));
     snprintf(bullets, 9 + sizeof(uint32_t), "bullets: %u", p.amount_of_bullets);

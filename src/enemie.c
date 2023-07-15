@@ -39,11 +39,11 @@ void update_enemies(
                 if (enemies[i][j].shoot_time == 0) {
                     
                     enemies[i][j].shoot_time = 1 + rand() % ENEMIE_SHOOT_TIME;
-                    Vector2 b_size = {enemies[i][j].size.x/3, enemies[i][j].size.y};
+                    Vector2 b_size = {enemies[i][j].size.x/4, enemies[i][j].size.y/2};
                     Vector2 b_pos = {enemies[i][j].position.x + enemies[i][j].size.x/2 - b_size.x/2, enemies[i][j].position.y};
                     Vector2 b_vel = {0.0f, 700.0f};
                                         
-                    enemie_bullets[(*bullet_counter)++] = Bullet(b_pos, b_size, b_vel, DARKBLUE);
+                    enemie_bullets[(*bullet_counter)++] = Bullet(b_pos, b_size, b_vel, PURPLE);
                 }
                 enemies[i][j].shoot_time--;
             }
@@ -103,13 +103,13 @@ bool are_all_dead(enemie enemies[ENEMIE_ROWS][ENEMIE_COLS]) {
     return true;
 }
 
-void draw_enemies(enemie enemies[ENEMIE_ROWS][ENEMIE_COLS], bullet enemie_bullets[ENEMIE_BULLETS], uint32_t bullet_counter) {
+void draw_enemies(enemie enemies[ENEMIE_ROWS][ENEMIE_COLS], Texture2D e_texture, bullet enemie_bullets[ENEMIE_BULLETS], uint32_t bullet_counter) {
     for (uint32_t i = 0; i < ENEMIE_ROWS; ++i) {
         for (uint32_t j = 0; j < ENEMIE_COLS; ++j) {
             if (enemies[i][j].position.x == -1 && enemies[i][j].position.y == -1)
                continue;
             
-            DrawRectangleV(enemies[i][j].position, enemies[i][j].size, enemies[i][j].color); 
+            DrawTextureV(e_texture, enemies[i][j].position, enemies[i][j].color); 
         }
     }
 
