@@ -25,6 +25,7 @@ void update_enemies(
     double delta_time,
     int direction_step                    
 );
+bool are_all_dead(enemie enemies[ENEMIE_ROWS][ENEMIE_COLS]);
 void draw_enemies(enemie enemies[ENEMIE_ROWS][ENEMIE_COLS], bullet enemie_bullets[ENEMIE_BULLETS], uint32_t bullet_counter);
 
 #endif

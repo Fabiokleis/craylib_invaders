@@ -8,7 +8,7 @@
 #include "config.h"
 
 
-player Player(Vector2 pos, Vector2 size, Vector2 vel, Color color) {
+player Player(Vector2 pos, Vector2 size, Vector2 vel, Color color, Sound bullet_sound) {
     return (player){
       .position = pos,
       .size = size,
@@ -17,6 +17,8 @@ player Player(Vector2 pos, Vector2 size, Vector2 vel, Color color) {
       .score = 0,
       .max_bullets = 5,
       .amount_of_bullets = 0,
+      .life = LIFES,
+      .bullet_sound = bullet_sound,
     };
 }
 
@@ -50,10 +52,10 @@ float sat_collision_detect(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 si
     vb[3] = (Vector2){pos2.x, pos2.y + size2.y};
 
     
-    float separation = -1.0f;
+    float separation = -99999.0f;
     for (uint32_t i = 0; i < 4; ++i) {
         Vector2 normal = perpendicular(sub(va[(i + 1) % 4], va[i]));
-        float minsep = 1.0f;
+        float minsep = 99999.0f;
 
         for (uint32_t j = 0; j < 4; ++j) {
             minsep = fmin(minsep, dot(sub(vb[j], va[i]), normal));   
@@ -73,7 +75,7 @@ bool is_colliding_squares(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 siz
 
 void shoot(player *p) {
     if (p->amount_of_bullets < p->max_bullets) {
-        Vector2 b_size = {p->size.x/3, p->size.y/2};
+        Vector2 b_size = {p->size.x/3, p->size.y};
         Vector2 b_pos = {p->position.x + p->size.x/2 - b_size.x/2, p->position.y};
         Vector2 b_vel = {0.0f, 800.0f};
         p->bullets[p->amount_of_bullets++] = Bullet(b_pos, b_size, b_vel, RED);
@@ -89,9 +91,10 @@ void update_player(player *p, double *bullet_time, float delta_time) {
     if (IsKeyDown(KEY_LEFT)) {
         if (p->position.x > 0) p->position.x -= (p->velocity.x * delta_time);
     }
-    
-    if (IsKeyDown(KEY_UP) && *bullet_time >= 0.2f) {
+
+    if ((IsKeyPressed(KEY_UP) || IsKeyDown(KEY_UP)) && *bullet_time >= 0.2f) {
         shoot(p);
+        PlaySound(p->bullet_sound);
         *bullet_time = 0.0f;
     }
 }
@@ -102,11 +105,16 @@ void draw_player(player p) {
 
     char *bullets = (char*)malloc(9 + sizeof(uint32_t));
     snprintf(bullets, 9 + sizeof(uint32_t), "bullets: %u", p.amount_of_bullets);
-    char *score = (char*)malloc(6 + sizeof(uint32_t));
-    snprintf(score, 6 + sizeof(uint32_t), "score: %u", p.score);
+    
+    char *score = (char*)malloc(7 + sizeof(uint32_t));
+    snprintf(score, 7 + sizeof(uint32_t), "score: %u", p.score);
+
+    char *lifes = (char*)malloc(5 + sizeof(uint32_t));
+    snprintf(lifes, 6 + sizeof(uint32_t), "life: %u", p.life);
 
     DrawText(score, 10, 10, 20, LIGHTGRAY);
     DrawText(bullets, 10, 30, 20, LIGHTGRAY);
+    DrawText(lifes, 10, 50, 20, LIGHTGRAY);
 }
 
 void update_bullets(player *p, float delta_time) {

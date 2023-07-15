@@ -15,9 +15,11 @@ typedef struct {
     uint32_t max_bullets;
     uint32_t amount_of_bullets;
     bullet bullets[5];
+    uint32_t life;
+    Sound bullet_sound;
 } player;
 
-player Player(Vector2 pos, Vector2 size, Vector2 vel, Color color);
+player Player(Vector2 pos, Vector2 size, Vector2 vel, Color color, Sound bullet_sound);
 void shoot(player *p);
 float sat_collision_detect(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2);
 bool is_colliding_squares(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2);

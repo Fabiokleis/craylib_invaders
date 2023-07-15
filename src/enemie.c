@@ -27,7 +27,7 @@ void update_enemies(
 ) {
 
     srand(time(NULL));
-    if (*enemie_shoot_time >= 4.0) {
+    if (*enemie_shoot_time >= 1.0) {
         *enemie_shoot_time = 0.0;
        
         for (uint32_t i = 0; i < ENEMIE_ROWS; ++i) {
@@ -35,16 +35,17 @@ void update_enemies(
                 if (enemies[i][j].position.x == -1 && enemies[i][j].position.y == -1)
                     continue;
                 
-                enemies[i][j].shoot_time--;
+
                 if (enemies[i][j].shoot_time == 0) {
                     
                     enemies[i][j].shoot_time = 1 + rand() % ENEMIE_SHOOT_TIME;
                     Vector2 b_size = {enemies[i][j].size.x/3, enemies[i][j].size.y};
                     Vector2 b_pos = {enemies[i][j].position.x + enemies[i][j].size.x/2 - b_size.x/2, enemies[i][j].position.y};
-                    Vector2 b_vel = {0.0f, 500.0f};
+                    Vector2 b_vel = {0.0f, 700.0f};
                                         
                     enemie_bullets[(*bullet_counter)++] = Bullet(b_pos, b_size, b_vel, DARKBLUE);
                 }
+                enemies[i][j].shoot_time--;
             }
         }
     }
@@ -54,6 +55,9 @@ void update_enemies(
             if (enemies[i][j].position.x == -1 && enemies[i][j].position.y == -1)
                     continue;
 
+            if (enemies[i][j].position.y + enemies[i][j].size.y >= HEIGHT)
+                p->life = 0;
+            
             enemies[i][j].position.x += enemies[i][j].velocity.x * delta_time * direction_step;
             enemies[i][j].position.y += enemies[i][j].velocity.y * delta_time;
         }
@@ -74,14 +78,29 @@ void update_enemies(
             }
         }        
     }
-    
 
     for (uint32_t b = 0; b < *bullet_counter; ++b) {
         enemie_bullets[b].position.y += enemie_bullets[b].velocity.y * delta_time;
+        if (is_colliding_squares(p->position, p->size, enemie_bullets[b].position, enemie_bullets[b].size)) {
+            enemie_bullets[b] = enemie_bullets[--(*bullet_counter)];
+            p->life--;
+            if (p->life == 0)
+                printf("game over!\n");
+        }
         if (enemie_bullets[b].position.y >= HEIGHT) {
             enemie_bullets[b] = enemie_bullets[--(*bullet_counter)];
         }
     }
+}
+
+bool are_all_dead(enemie enemies[ENEMIE_ROWS][ENEMIE_COLS]) {
+    for (uint32_t i = 0; i < ENEMIE_ROWS; ++i) {
+        for (uint32_t j = 0; j < ENEMIE_COLS; ++j) {
+            if (!(enemies[i][j].position.x == -1 && enemies[i][j].position.y == -1))
+                return false;
+        }
+    }
+    return true;
 }
 
 void draw_enemies(enemie enemies[ENEMIE_ROWS][ENEMIE_COLS], bullet enemie_bullets[ENEMIE_BULLETS], uint32_t bullet_counter) {
