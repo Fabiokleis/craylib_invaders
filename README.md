@@ -23,3 +23,7 @@ left arrow <kbd><-</kbd> left movement
 right arrow <kbd>-></kbd> right movement
 
 up arrow <kbd>^</kbd> shoot
+
+'p key <kbd>P</kbd> pause game
+
+esc <kbd>Esc</kbd> quit game
