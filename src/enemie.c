@@ -34,17 +34,6 @@ void update_enemies(
             for (uint32_t j = 0; j < ENEMIE_COLS; ++j) {
                 if (enemies[i][j].position.x == -1 && enemies[i][j].position.y == -1)
                     continue;
-                
-
-                if (enemies[i][j].shoot_time == 0) {
-                    
-                    enemies[i][j].shoot_time = 1 + rand() % ENEMIE_SHOOT_TIME;
-                    Vector2 b_size = {enemies[i][j].size.x/4, enemies[i][j].size.y/2};
-                    Vector2 b_pos = {enemies[i][j].position.x + enemies[i][j].size.x/2 - b_size.x/2, enemies[i][j].position.y};
-                    Vector2 b_vel = {0.0f, 700.0f};
-                                        
-                    enemie_bullets[(*bullet_counter)++] = Bullet(b_pos, b_size, b_vel, PURPLE);
-                }
                 enemies[i][j].shoot_time--;
             }
         }
@@ -54,6 +43,15 @@ void update_enemies(
         for (uint32_t j = 0; j < ENEMIE_COLS; ++j) {
             if (enemies[i][j].position.x == -1 && enemies[i][j].position.y == -1)
                     continue;
+
+            if (enemies[i][j].shoot_time == 0) {
+                enemies[i][j].shoot_time = 1 + rand() % ENEMIE_SHOOT_TIME;
+                Vector2 b_size = {enemies[i][j].size.x/4, enemies[i][j].size.y/2};
+                Vector2 b_pos = {enemies[i][j].position.x + enemies[i][j].size.x/2 - b_size.x/2, enemies[i][j].position.y};
+                Vector2 b_vel = {0.0f, 700.0f};
+
+                enemie_bullets[(*bullet_counter)++] = Bullet(b_pos, b_size, b_vel, PURPLE);
+            }
 
             if (enemies[i][j].position.y + enemies[i][j].size.y >= HEIGHT)
                 p->life = 0;
