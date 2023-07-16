@@ -1,5 +1,8 @@
 # craylib_invaders
-invaders in c and raylib
+my version of invaders in c and raylib
+
+![image](https://github.com/Fabiokleis/craylib_invaders/assets/66813406/7760755b-e8a1-46e7-a845-e7d0ceee4013)
+
 
 # Makefile
 ### build
